@@ -166,12 +166,6 @@
   }
   button.submit:hover{transform:translateY(-1px); box-shadow:0 8px 20px rgba(15,35,41,0.32);}
   button.submit:disabled{opacity:.6; cursor:default; transform:none;}
-  button.secondary{
-    background:#fff; color:var(--deep); border:1.5px solid var(--line);
-    border-radius:11px; padding:12px 30px; font-size:14px; font-weight:700;
-    font-family:'Tajawal',sans-serif; cursor:pointer; margin-top:10px;
-  }
-  button.secondary:hover{border-color:var(--sage);}
   .hint{font-size:12px; color:var(--muted); margin-top:10px;}
 
   /* Success state */
@@ -268,10 +262,8 @@
     </div>
 
     <div class="submit-row">
-      <button class="submit" id="submitBtn" onclick="submitSurvey()">إرسال الإجابة عبر البريد</button>
-      <div class="hint">سيفتح تطبيق البريد لديك برسالة جاهزة، فقط اضغط "إرسال" لإتمام المشاركة</div>
-      <br>
-      <button class="secondary" onclick="downloadSurvey()">تنزيل نسخة من إجابتك (بديل احتياطي)</button>
+      <button class="submit" id="submitBtn" onclick="submitSurvey()">إرسال الإجابة</button>
+      <div class="hint">تُحفظ إجابتك مباشرة، لا حاجة لإرسال بريد</div>
     </div>
   </div>
 
@@ -280,7 +272,10 @@
 
 <script>
 const DAYS = ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
-const RECIPIENT_EMAIL = "Muhannad.niss@gmail.com";
+
+/* ====== الصق هنا رابط Google Apps Script بعد نشره (انظر التعليمات) ====== */
+const APPS_SCRIPT_URL = "PASTE_YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
+/* ======================================================================= */
 
 function buildDayCards(){
   const container = document.getElementById("daysContainer");
@@ -344,72 +339,43 @@ function hasAnyAnswer(entry){
   return entry.days.some(d => d.breakfast || d.lunch || d.dinner);
 }
 
-function formatEntryAsText(entry){
-  let lines = [];
-  lines.push("استبيان تفضيلات الوجبات الأسبوعية - قاعدة صلالة الجوية");
-  lines.push("");
-  lines.push("الاسم: " + (entry.name || "غير محدد"));
-  lines.push("القسم / السرب: " + (entry.dept || "غير محدد"));
-  lines.push("");
-  lines.push("تفضيلات الأيام:");
-  entry.days.forEach(d=>{
-    if(!d.breakfast && !d.lunch && !d.dinner) return;
-    lines.push("- " + d.day + ":");
-    if(d.breakfast) lines.push("   فطور: " + d.breakfast);
-    if(d.lunch) lines.push("   غداء: " + d.lunch);
-    if(d.dinner) lines.push("   عشاء: " + d.dinner);
-  });
-  lines.push("");
-  lines.push("توزيع البروتين الأسبوعي:");
-  lines.push("لحم: " + entry.protein.meat + " مرة");
-  lines.push("دجاج: " + entry.protein.chicken + " مرة");
-  lines.push("سمك: " + entry.protein.fish + " مرة");
-  lines.push("");
-  lines.push("التوقيت المقترح:");
-  lines.push("الفطور: " + (entry.breakfastTime || "لم يُحدد"));
-  lines.push("العشاء: " + (entry.dinnerTime || "لم يُحدد"));
-  return lines.join("\n");
-}
-
-function submitSurvey(){
+async function submitSurvey(){
   const entry = collectEntry();
   if(!hasAnyAnswer(entry)){
     alert("الرجاء تعبئة تفضيل واحد على الأقل قبل الإرسال");
     return;
   }
-  const bodyText = formatEntryAsText(entry);
-  const subject = "استبيان تفضيلات الوجبات - " + (entry.name || "مشارك");
-  const mailtoUrl = "mailto:" + RECIPIENT_EMAIL
-    + "?subject=" + encodeURIComponent(subject)
-    + "&body=" + encodeURIComponent(bodyText);
-  window.location.href = mailtoUrl;
-  showSuccess();
-}
-
-function downloadSurvey(){
-  const entry = collectEntry();
-  if(!hasAnyAnswer(entry)){
-    alert("الرجاء تعبئة تفضيل واحد على الأقل قبل التنزيل");
+  if(APPS_SCRIPT_URL.indexOf("https://script.google.com/macros/s/AKfycbyehrt7rzKSORtdYQh5Ze_PxCzwa2D-LZIOTTYbYKT-yyYxIiwKWe2dL4IUquJLXq-6/exec") === 0){
+    alert("لم يتم ربط الاستمارة بجوجل شيتس بعد. الرجاء استكمال إعداد الرابط أولاً.");
     return;
   }
-  const bodyText = formatEntryAsText(entry);
-  const blob = new Blob([bodyText], { type: "text/plain;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "استبيان-الوجبات-" + (entry.name || "مشارك") + ".txt";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+
+  const btn = document.getElementById("submitBtn");
+  btn.disabled = true;
+  btn.textContent = "جارِ الإرسال...";
+
+  try{
+    await fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(entry)
+    });
+    showSuccess();
+  }catch(e){
+    console.error(e);
+    alert("حدث خطأ أثناء إرسال الإجابة، الرجاء المحاولة مرة أخرى");
+    btn.disabled = false;
+    btn.textContent = "إرسال الإجابة";
+  }
 }
 
 function showSuccess(){
   document.getElementById("formCard").innerHTML = `
     <div class="success">
       <div class="mark">✓</div>
-      <h2>تم تجهيز إجابتك</h2>
-      <p>فُتح تطبيق البريد لديك برسالة تحتوي إجاباتك. أكمل الضغط على "إرسال" في تطبيق البريد لإتمام المشاركة. إذا لم يفتح تطبيق البريد تلقائيًا، يمكنك تنزيل نسخة وإرسالها يدويًا.</p>
+      <h2>شكراً لمشاركتك</h2>
+      <p>تم استلام إجاباتك بنجاح، وستُستخدم ضمن تخطيط وجبات الأسبوع لأفراد القاعدة.</p>
     </div>
   `;
 }

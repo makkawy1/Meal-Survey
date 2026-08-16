@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>استبيان تفضيلات الوجبات - أفراد قاعدة صلالة الجوية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400..700&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1E2A24;
+    --deep:#16323A;
+    --deep-2:#0F2329;
+    --gold:#C9A24B;
+    --gold-soft:#E7D5A6;
+    --sage:#7C9473;
+    --paper:#F6F4EF;
+    --card:#FFFFFF;
+    --line:#DED7C4;
+    --muted:#6C7A72;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    background-image:
+      radial-gradient(circle at 12% 8%, rgba(124,148,115,0.08), transparent 40%),
+      radial-gradient(circle at 88% 92%, rgba(201,162,75,0.10), transparent 40%);
+    color:var(--ink);
+    font-family:'Tajawal', sans-serif;
+    min-height:100vh;
+    padding:32px 16px 80px;
+  }
+  .wrap{max-width:760px;margin:0 auto;}
+
+  /* Header */
+  .letterhead{
+    background:linear-gradient(160deg, var(--deep) 0%, var(--deep-2) 100%);
+    color:#F3EFE4;
+    border-radius:18px;
+    padding:38px 32px 30px;
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(15,35,41,0.25);
+  }
+  .letterhead::before{
+    content:"";
+    position:absolute; inset:10px;
+    border:1px solid rgba(231,213,166,0.35);
+    border-radius:12px;
+    pointer-events:none;
+  }
+  .eyebrow{
+    font-size:12.5px; letter-spacing:.12em; color:var(--gold-soft);
+    text-align:center; margin-bottom:10px; font-weight:700;
+  }
+  h1{
+    font-family:'Reem Kufi', sans-serif;
+    font-size:clamp(26px,4.2vw,34px);
+    text-align:center;
+    margin:0 0 8px;
+    font-weight:700;
+    color:#FBF7EC;
+  }
+  .divider{
+    width:120px; height:2px; margin:14px auto;
+    background:linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .sub{
+    text-align:center; font-size:14.5px; line-height:1.9;
+    color:#D6D0C0; max-width:520px; margin:0 auto;
+  }
+
+  /* Card */
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:16px;
+    margin-top:22px;
+    padding:26px 24px;
+    box-shadow:0 2px 10px rgba(30,42,36,0.05);
+  }
+  .field-row{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:6px;}
+  .field{flex:1 1 220px;}
+  label.field-label{
+    display:block; font-size:13.5px; font-weight:700; color:var(--deep);
+    margin-bottom:6px;
+  }
+  input[type=text]{
+    width:100%; padding:11px 13px; border:1px solid var(--line);
+    border-radius:9px; font-family:'Tajawal',sans-serif; font-size:14.5px;
+    background:#FCFBF8; color:var(--ink);
+  }
+  input[type=text]:focus{outline:2px solid var(--sage); outline-offset:1px; border-color:var(--sage);}
+
+  /* Section heads */
+  .meal-section{margin-top:26px;}
+  .meal-head{
+    display:flex; align-items:center; gap:12px; margin-bottom:14px;
+  }
+  .meal-icon{
+    width:34px; height:34px; border-radius:50%;
+    background:radial-gradient(circle at 30% 30%, var(--gold-soft), var(--gold));
+    display:flex; align-items:center; justify-content:center;
+    font-size:16px; flex-shrink:0;
+    box-shadow:0 2px 6px rgba(201,162,75,0.4);
+  }
+  .meal-title{
+    font-family:'Reem Kufi', sans-serif;
+    font-size:19px; color:var(--deep); font-weight:700;
+  }
+  .meal-title small{
+    display:block; font-family:'Tajawal',sans-serif; font-weight:400;
+    font-size:12px; color:var(--muted); margin-top:2px;
+  }
+  .meal-rule{
+    flex:1; height:1px;
+    background:repeating-linear-gradient(90deg, var(--line) 0 6px, transparent 6px 10px);
+  }
+
+  /* Day cards */
+  .day-card{
+    border:1px solid var(--line); border-radius:13px; overflow:hidden;
+    margin-bottom:14px; background:#FCFBF8;
+  }
+  .day-header{
+    background:linear-gradient(160deg, var(--deep), var(--deep-2));
+    color:#F3EFE4; padding:9px 16px;
+    font-family:'Reem Kufi',sans-serif; font-size:15px; font-weight:700;
+  }
+  .day-body{padding:14px 16px 6px;}
+  .day-meal-row{
+    display:flex; align-items:center; gap:10px; margin-bottom:10px;
+  }
+  .day-meal-icon{width:22px; text-align:center; font-size:14px; flex-shrink:0;}
+  .day-meal-label{width:46px; font-size:12.5px; color:var(--muted); flex-shrink:0;}
+  .day-meal-row input[type=text]{flex:1; padding:9px 11px; font-size:13.8px;}
+
+  /* Protein distribution */
+  .protein-grid{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:10px;
+  }
+  .protein-item{
+    background:#FCFBF8; border:1.5px solid var(--line); border-radius:11px;
+    padding:12px; text-align:center;
+  }
+  .protein-item .field-label{text-align:center; margin-bottom:8px;}
+  .protein-input{
+    width:100%; text-align:center; font-size:20px; font-weight:700;
+    border:1px solid var(--line); border-radius:8px; padding:8px;
+    font-family:'Tajawal',sans-serif; color:var(--deep); background:#fff;
+  }
+  .protein-input:focus{outline:2px solid var(--sage); outline-offset:1px; border-color:var(--sage);}
+  #proteinTotalHint.over{color:#B5484A; font-weight:700;}
+  #proteinTotalHint.ok{color:var(--sage); font-weight:700;}
+
+  /* Submit */
+  .submit-row{margin-top:28px; text-align:center;}
+  button.submit{
+    background:linear-gradient(160deg, var(--deep), var(--deep-2));
+    color:#F6F1E2; border:none; border-radius:11px;
+    padding:14px 42px; font-size:15.5px; font-weight:700;
+    font-family:'Tajawal',sans-serif; cursor:pointer;
+    box-shadow:0 6px 16px rgba(15,35,41,0.25);
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  button.submit:hover{transform:translateY(-1px); box-shadow:0 8px 20px rgba(15,35,41,0.32);}
+  button.submit:disabled{opacity:.6; cursor:default; transform:none;}
+  button.secondary{
+    background:#fff; color:var(--deep); border:1.5px solid var(--line);
+    border-radius:11px; padding:12px 30px; font-size:14px; font-weight:700;
+    font-family:'Tajawal',sans-serif; cursor:pointer; margin-top:10px;
+  }
+  button.secondary:hover{border-color:var(--sage);}
+  .hint{font-size:12px; color:var(--muted); margin-top:10px;}
+
+  /* Success state */
+  .success{
+    text-align:center; padding:50px 20px;
+  }
+  .success .mark{
+    width:64px; height:64px; border-radius:50%; margin:0 auto 18px;
+    background:radial-gradient(circle at 30% 30%, var(--gold-soft), var(--gold));
+    display:flex; align-items:center; justify-content:center; font-size:28px;
+    box-shadow:0 6px 16px rgba(201,162,75,0.35);
+  }
+  .success h2{font-family:'Reem Kufi',sans-serif; color:var(--deep); margin:0 0 8px; font-size:22px;}
+  .success p{color:var(--muted); font-size:14px; line-height:1.9; max-width:420px; margin:0 auto;}
+
+  .footer-note{
+    text-align:center; margin-top:22px; font-size:12px; color:var(--muted);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="letterhead">
+    <div class="eyebrow">استمارة داخلية &nbsp;·&nbsp; خاصة بأفراد قاعدة صلالة الجوية</div>
+    <h1>استبيان تفضيلات الوجبات الأسبوعية</h1>
+    <div class="divider"></div>
+    <p class="sub">نسعى لتنظيم وجبات الفطور والغداء والعشاء لأيام الأسبوع السبعة بما يناسب أذواقكم. يُرجى تعبئة الاستمارة أدناه، وسيتم اعتماد النتائج في إعداد قائمة الأسبوع.</p>
+  </div>
+
+  <div class="card" id="formCard">
+    <div class="field-row">
+      <div class="field">
+        <label class="field-label">الاسم</label>
+        <input type="text" id="empName" placeholder="اسمك (اختياري)">
+      </div>
+      <div class="field">
+        <label class="field-label">القسم / السرب</label>
+        <input type="text" id="empDept" placeholder="مثال: السرب 5">
+      </div>
+    </div>
+
+    <!-- Days -->
+    <div class="meal-section">
+      <div class="meal-head">
+        <div class="meal-icon">📅</div>
+        <div class="meal-title">تفضيلاتك ليوم بيوم<small>اختر ما يناسبك من فطور وغداء وعشاء لكل يوم</small></div>
+        <div class="meal-rule"></div>
+      </div>
+      <div id="daysContainer"></div>
+    </div>
+
+    <!-- Protein distribution -->
+    <div class="meal-section">
+      <div class="meal-head">
+        <div class="meal-icon">📊</div>
+        <div class="meal-title">توزيع نوع البروتين<small>كم مرة تفضّل كل نوع خلال الأسبوع (7 أيام)</small></div>
+        <div class="meal-rule"></div>
+      </div>
+      <div class="protein-grid">
+        <div class="protein-item">
+          <label class="field-label">لحم</label>
+          <input type="number" class="protein-input" id="proteinMeat" min="0" max="7" value="0" oninput="updateProteinTotal()">
+        </div>
+        <div class="protein-item">
+          <label class="field-label">دجاج</label>
+          <input type="number" class="protein-input" id="proteinChicken" min="0" max="7" value="0" oninput="updateProteinTotal()">
+        </div>
+        <div class="protein-item">
+          <label class="field-label">سمك</label>
+          <input type="number" class="protein-input" id="proteinFish" min="0" max="7" value="0" oninput="updateProteinTotal()">
+        </div>
+      </div>
+      <div class="hint" id="proteinTotalHint">المجموع: 0 من 7 أيام</div>
+    </div>
+
+    <!-- Timing -->
+    <div class="meal-section">
+      <div class="meal-head">
+        <div class="meal-icon">⏰</div>
+        <div class="meal-title">التوقيت المناسب<small>اقتراحك لأفضل وقت لتقديم الفطور والعشاء</small></div>
+        <div class="meal-rule"></div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label">الوقت المقترح للفطور</label>
+          <input type="text" id="breakfastTimeInput" placeholder="مثال: 6:30 صباحًا">
+        </div>
+        <div class="field">
+          <label class="field-label">الوقت المقترح للعشاء</label>
+          <input type="text" id="dinnerTimeInput" placeholder="مثال: 7:00 مساءً">
+        </div>
+      </div>
+    </div>
+
+    <div class="submit-row">
+      <button class="submit" id="submitBtn" onclick="submitSurvey()">إرسال الإجابة عبر البريد</button>
+      <div class="hint">سيفتح تطبيق البريد لديك برسالة جاهزة، فقط اضغط "إرسال" لإتمام المشاركة</div>
+      <br>
+      <button class="secondary" onclick="downloadSurvey()">تنزيل نسخة من إجابتك (بديل احتياطي)</button>
+    </div>
+  </div>
+
+  <div class="footer-note">جميع الإجابات تُستخدم فقط لتنظيم وجبات أفراد قاعدة صلالة الجوية</div>
+</div>
+
+<script>
+const DAYS = ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+const RECIPIENT_EMAIL = "Muhannad.niss@gmail.com";
+
+function buildDayCards(){
+  const container = document.getElementById("daysContainer");
+  container.innerHTML = DAYS.map((day,i)=>`
+    <div class="day-card">
+      <div class="day-header">${day}</div>
+      <div class="day-body">
+        <div class="day-meal-row">
+          <span class="day-meal-icon">🌅</span>
+          <span class="day-meal-label">فطور</span>
+          <input type="text" id="d${i}_breakfast" placeholder="فطور ${day}">
+        </div>
+        <div class="day-meal-row">
+          <span class="day-meal-icon">🍽️</span>
+          <span class="day-meal-label">غداء</span>
+          <input type="text" id="d${i}_lunch" placeholder="غداء ${day}">
+        </div>
+        <div class="day-meal-row">
+          <span class="day-meal-icon">🌙</span>
+          <span class="day-meal-label">عشاء</span>
+          <input type="text" id="d${i}_dinner" placeholder="عشاء ${day}">
+        </div>
+      </div>
+    </div>
+  `).join("");
+}
+buildDayCards();
+
+function updateProteinTotal(){
+  const meat = parseInt(document.getElementById("proteinMeat").value)||0;
+  const chicken = parseInt(document.getElementById("proteinChicken").value)||0;
+  const fish = parseInt(document.getElementById("proteinFish").value)||0;
+  const total = meat + chicken + fish;
+  const hint = document.getElementById("proteinTotalHint");
+  hint.textContent = `المجموع: ${total} من 7 أيام`;
+  hint.className = total > 7 ? "hint over" : (total === 7 ? "hint ok" : "hint");
+}
+
+function collectEntry(){
+  const days = DAYS.map((day,i)=>({
+    day,
+    breakfast: document.getElementById(`d${i}_breakfast`).value.trim(),
+    lunch: document.getElementById(`d${i}_lunch`).value.trim(),
+    dinner: document.getElementById(`d${i}_dinner`).value.trim()
+  }));
+  return {
+    name: document.getElementById("empName").value.trim(),
+    dept: document.getElementById("empDept").value.trim(),
+    days,
+    protein: {
+      meat: parseInt(document.getElementById("proteinMeat").value)||0,
+      chicken: parseInt(document.getElementById("proteinChicken").value)||0,
+      fish: parseInt(document.getElementById("proteinFish").value)||0
+    },
+    breakfastTime: document.getElementById("breakfastTimeInput").value.trim(),
+    dinnerTime: document.getElementById("dinnerTimeInput").value.trim()
+  };
+}
+
+function hasAnyAnswer(entry){
+  return entry.days.some(d => d.breakfast || d.lunch || d.dinner);
+}
+
+function formatEntryAsText(entry){
+  let lines = [];
+  lines.push("استبيان تفضيلات الوجبات الأسبوعية - قاعدة صلالة الجوية");
+  lines.push("");
+  lines.push("الاسم: " + (entry.name || "غير محدد"));
+  lines.push("القسم / السرب: " + (entry.dept || "غير محدد"));
+  lines.push("");
+  lines.push("تفضيلات الأيام:");
+  entry.days.forEach(d=>{
+    if(!d.breakfast && !d.lunch && !d.dinner) return;
+    lines.push("- " + d.day + ":");
+    if(d.breakfast) lines.push("   فطور: " + d.breakfast);
+    if(d.lunch) lines.push("   غداء: " + d.lunch);
+    if(d.dinner) lines.push("   عشاء: " + d.dinner);
+  });
+  lines.push("");
+  lines.push("توزيع البروتين الأسبوعي:");
+  lines.push("لحم: " + entry.protein.meat + " مرة");
+  lines.push("دجاج: " + entry.protein.chicken + " مرة");
+  lines.push("سمك: " + entry.protein.fish + " مرة");
+  lines.push("");
+  lines.push("التوقيت المقترح:");
+  lines.push("الفطور: " + (entry.breakfastTime || "لم يُحدد"));
+  lines.push("العشاء: " + (entry.dinnerTime || "لم يُحدد"));
+  return lines.join("\n");
+}
+
+function submitSurvey(){
+  const entry = collectEntry();
+  if(!hasAnyAnswer(entry)){
+    alert("الرجاء تعبئة تفضيل واحد على الأقل قبل الإرسال");
+    return;
+  }
+  const bodyText = formatEntryAsText(entry);
+  const subject = "استبيان تفضيلات الوجبات - " + (entry.name || "مشارك");
+  const mailtoUrl = "mailto:" + RECIPIENT_EMAIL
+    + "?subject=" + encodeURIComponent(subject)
+    + "&body=" + encodeURIComponent(bodyText);
+  window.location.href = mailtoUrl;
+  showSuccess();
+}
+
+function downloadSurvey(){
+  const entry = collectEntry();
+  if(!hasAnyAnswer(entry)){
+    alert("الرجاء تعبئة تفضيل واحد على الأقل قبل التنزيل");
+    return;
+  }
+  const bodyText = formatEntryAsText(entry);
+  const blob = new Blob([bodyText], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "استبيان-الوجبات-" + (entry.name || "مشارك") + ".txt";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function showSuccess(){
+  document.getElementById("formCard").innerHTML = `
+    <div class="success">
+      <div class="mark">✓</div>
+      <h2>تم تجهيز إجابتك</h2>
+      <p>فُتح تطبيق البريد لديك برسالة تحتوي إجاباتك. أكمل الضغط على "إرسال" في تطبيق البريد لإتمام المشاركة. إذا لم يفتح تطبيق البريد تلقائيًا، يمكنك تنزيل نسخة وإرسالها يدويًا.</p>
+    </div>
+  `;
+}
+</script>
+</body>
+</html>

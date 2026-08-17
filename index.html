@@ -92,6 +92,12 @@
     background:#FCFBF8; color:var(--ink);
   }
   input[type=text]:focus{outline:2px solid var(--sage); outline-offset:1px; border-color:var(--sage);}
+  textarea{
+    width:100%; min-height:90px; padding:11px 13px; border:1px solid var(--line);
+    border-radius:9px; font-family:'Tajawal',sans-serif; font-size:14px;
+    resize:vertical; background:#FCFBF8; color:var(--ink);
+  }
+  textarea:focus{outline:2px solid var(--sage); outline-offset:1px; border-color:var(--sage);}
 
   /* Section heads */
   .meal-section{margin-top:26px;}
@@ -261,6 +267,16 @@
       </div>
     </div>
 
+    <!-- Feedback -->
+    <div class="meal-section">
+      <div class="meal-head">
+        <div class="meal-icon">💬</div>
+        <div class="meal-title">ملاحظات وآراء<small>رأيك بخصوص الوجبات الحالية (اختياري)</small></div>
+        <div class="meal-rule"></div>
+      </div>
+      <textarea id="feedbackInput" placeholder="اكتب ملاحظاتك أو مقترحاتك بخصوص الوجبات الحالية..."></textarea>
+    </div>
+
     <div class="submit-row">
       <button class="submit" id="submitBtn" onclick="submitSurvey()">إرسال الإجابة</button>
       <div class="hint">تُحفظ إجابتك مباشرة، لا حاجة لإرسال بريد</div>
@@ -331,7 +347,8 @@ function collectEntry(){
       fish: parseInt(document.getElementById("proteinFish").value)||0
     },
     breakfastTime: document.getElementById("breakfastTimeInput").value.trim(),
-    dinnerTime: document.getElementById("dinnerTimeInput").value.trim()
+    dinnerTime: document.getElementById("dinnerTimeInput").value.trim(),
+    feedback: document.getElementById("feedbackInput").value.trim()
   };
 }
 
@@ -345,7 +362,7 @@ async function submitSurvey(){
     alert("الرجاء تعبئة تفضيل واحد على الأقل قبل الإرسال");
     return;
   }
-  if(APPS_SCRIPT_URL.indexOf("PASTE_YOUR") === 0){
+  if(APPS_SCRIPT_URL.indexOf("https://script.google.com/macros/s/AKfycbyfwzuQDdzu8GgQsujqjHZagD9ncb4JCKCtguEXd_k14gQ4F3nOU3IG1awJJKXDAip0DA/exec") === 0){
     alert("لم يتم ربط الاستمارة بجوجل شيتس بعد. الرجاء استكمال إعداد الرابط أولاً.");
     return;
   }

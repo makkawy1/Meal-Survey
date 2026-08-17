@@ -290,7 +290,7 @@
 const DAYS = ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
 
 /* ====== الصق هنا رابط Google Apps Script بعد نشره (انظر التعليمات) ====== */
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyfwzuQDdzu8GgQsujqjHZagD9ncb4JCKCtguEXd_k14gQ4F3nOU3IG1awJJKXDAip0DA/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyQ3olCKY8rzOC71hr45fc5cl2xJuQ5JFOm0x24mJP4vIDpZPEhyWpCh_0SyH9a2RmE3A/exec";
 /* ======================================================================= */
 
 function buildDayCards(){
@@ -362,7 +362,7 @@ async function submitSurvey(){
     alert("الرجاء تعبئة تفضيل واحد على الأقل قبل الإرسال");
     return;
   }
-  if(APPS_SCRIPT_URL.indexOf("https://script.google.com/macros/s/AKfycbyfwzuQDdzu8GgQsujqjHZagD9ncb4JCKCtguEXd_k14gQ4F3nOU3IG1awJJKXDAip0DA/exec") === 0){
+  if(APPS_SCRIPT_URL.indexOf("https://script.google.com/macros/s/AKfycbyQ3olCKY8rzOC71hr45fc5cl2xJuQ5JFOm0x24mJP4vIDpZPEhyWpCh_0SyH9a2RmE3A/exec") === 0){
     alert("لم يتم ربط الاستمارة بجوجل شيتس بعد. الرجاء استكمال إعداد الرابط أولاً.");
     return;
   }
